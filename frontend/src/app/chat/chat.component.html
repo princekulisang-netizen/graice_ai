@@ -1,0 +1,50 @@
+<div class="goblin-chat-container">
+    <!-- Header Aplikasi -->
+    <div class="chat-header">
+        <div class="logo-title">
+            <span class="status-dot"></span>
+            <h2>Goblin AI</h2>
+        </div>
+        <div class="model-selector-wrapper">
+            <label for="modelSelect">Model:</label>
+            <select id="modelSelect" [(ngModel)]="selectedModel">
+                <option *ngFor="let model of models" [value]="model.id">
+                    {{ model.id }}
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Area Riwayat Pesan -->
+    <div class="chat-messages-area">
+        <div *ngIf="messages.length === 0" class="welcome-message">
+            <p>Halo! Sistem agent siap menerima pertanyaan teknis atau arsitektur Anda.</p>
+        </div>
+
+        <div *ngFor="let msg of messages" class="message-bubble" [ngClass]="{
+            'user-message': msg.sender === 'Anda',
+            'ai-message': msg.sender === 'Goblin AI',
+            'system-message': msg.sender === 'Sistem'
+        }">
+            <div class="sender-name">{{ msg.sender }}</div>
+            <div class="message-text">{{ msg.text }}</div>
+        </div>
+
+        <div *ngIf="isLoading" class="message-bubble ai-message loading-bubble">
+            <div class="sender-name">Goblin AI</div>
+            <div class="message-text typing-indicator">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Area Input Pesan -->
+    <div class="chat-input-area">
+        <textarea [(ngModel)]="userInput" (keyup.enter)="onSendMessage()" placeholder="Jang tanya aneh - aneh !"
+            rows="1" [disabled]="isLoading">
+    </textarea>
+        <button (click)="onSendMessage()" [disabled]="isLoading || !userInput.trim()">
+            Kirim
+        </button>
+    </div>
+</div>
